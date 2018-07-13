@@ -1,0 +1,50 @@
+{
+  "name": "blogserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index",
+  "types": "lib/index",
+  "scripts": {
+    "start": "npm run build:live",
+    "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prakash7m/blogserver.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/prakash7m/blogserver/issues"
+  },
+  "homepage": "https://github.com/prakash7m/blogserver#readme",
+  "devDependencies": {
+    "@types/bcrypt": "^2.0.0",
+    "@types/bcrypt-nodejs": "0.0.30",
+    "@types/express-jwt": "0.0.40",
+    "@types/express-session": "^1.15.10",
+    "@types/jsonwebtoken": "^7.2.8",
+    "@types/mongoose": "^5.2.0",
+    "@types/node": "^10.5.2",
+    "nodemon": "^1.17.5",
+    "ts-node": "^7.0.0",
+    "typescript": "^2.9.2"
+  },
+  "dependencies": {
+    "@types/es6-shim": "^0.31.37",
+    "@types/express": "^4.16.0",
+    "bcrypt": "^3.0.0",
+    "bluebird": "^3.5.1",
+    "express": "^4.16.3",
+    "express-jwt": "^5.3.1",
+    "express-session": "^1.15.6",
+    "express-validator": "^5.2.0",
+    "inversify": "^4.13.0",
+    "inversify-express-utils": "^6.1.0",
+    "jsonwebtoken": "^8.3.0",
+    "mongoose": "^5.2.2",
+    "mongoose-paginate": "^5.0.3",
+    "reflect-metadata": "^0.1.12"
+  }
+}
