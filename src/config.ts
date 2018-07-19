@@ -1,1 +1,0 @@
-export const jwtSecret = 'my jwt secret';

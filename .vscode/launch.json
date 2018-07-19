@@ -1,38 +1,17 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "type": "node",
-            "request": "attach",
-            "name": "Attach",
-            "port": 3000
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Program",
-            "program": "${workspaceFolder}\\src\\index.js",
-            "outFiles": [
-                "${workspaceFolder}/**/*.js"
-            ]
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch current file w/ ts-node",
-            "protocol": "inspector",
-            "args": [
-                "${relativeFile}"
-            ],
-            "cwd": "${workspaceRoot}",
-            "runtimeArgs": [
-                "-r",
-                "ts-node/register"
-            ],
-            "internalConsoleOptions": "openOnSessionStart"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug TypeScript in Node.js",
+      "preLaunchTask": "typescript",
+      "program": "${workspaceFolder}/src/index.ts",
+      "cwd": "${workspaceFolder}",
+      "protocol": "inspector",
+      "outFiles": [
+        "${workspaceFolder}/bin/**/*.js"
+      ]
+    }
+  ]
 }

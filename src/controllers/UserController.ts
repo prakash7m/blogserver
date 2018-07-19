@@ -1,10 +1,11 @@
 import { controller, BaseHttpController, httpPost, httpGet, httpPut, httpDelete } from "inversify-express-utils";
 import { inject } from "inversify";
-import { UserService } from "../services/UserService";
 import { Request, Response } from "express";
+
+import { UserService } from "../services/UserService";
 import { ErrorHandler } from "../lib/ErrorHandler";
 import { UserValidationMiddleware } from "../validators/UserValidator";
-import { auth } from "../lib/Auth";
+import { authRequired } from "../config/passport";
 
 /**
  * The user controller
@@ -13,7 +14,7 @@ import { auth } from "../lib/Auth";
  * @class UserController
  * @extends {BaseHttpController}
  */
-@controller("/user", auth.required)
+@controller("/api/user", authRequired())
 export class UserController extends BaseHttpController {
   /**
    * Creates an instance of UserController.

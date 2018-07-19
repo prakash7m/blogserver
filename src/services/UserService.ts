@@ -1,9 +1,10 @@
-import { User } from "../models/UserModel";
 import { injectable } from "inversify";
+
+import { User, IUserModel } from "../models/UserModel";
 import { IUser, IUserUpdate } from '../models/UserModel';
 
 /**
- * User service
+ * User service: Basic user operations on the database
  *
  * @export
  * @class UserService
@@ -11,66 +12,86 @@ import { IUser, IUserUpdate } from '../models/UserModel';
 @injectable()
 export class UserService {
   /**
-   * Create
+   * Creates a new user in the database
    *
    * @param {UserModel} { email, username, password }
-   * @returns {Promise<any>}
+   * @returns {Promise<IUserModel[]>}
    * @memberof UserService
    */
-  async create({ email, username, password }: IUser): Promise<any> {
+  async create({ email, username, password }: IUser): Promise<IUserModel> {
     return await User.create({ email, username, password });
   }
 
   /**
-   * List
+   * Retrieves the list of users in the database
    *
    * @param {number} [page]
-   * @returns {Promise<any[]>}
+   * @returns {Promise<IUserModel[][]>}
    * @memberof UserService
    */
-  async list(page?: number): Promise<any[]> {
+  async list(page?: number): Promise<IUserModel[]> {
     return await User.find();
   }
 
   /**
-   * Fetch
+   * Fetches the user information by id
    *
    * @param {string} id
-   * @returns {Promise<any>}
+   * @returns {Promise<IUserModel | null>}
    * @memberof UserService
    */
-  async fetch(id: string): Promise<any> {
+  async fetch(id: string): Promise<IUserModel | null> {
     return await User.findById(id);
   }
 
   /**
-   * Update
+   * Updates the user on db by id
    *
    * @param {string} id
    * @param {UserUpdateModel} { email, username }
-   * @returns {Promise<any>}
+   * @returns {Promise<IUserModel | null>}
    * @memberof UserService
    */
-  async update(id: string, { email, username }: IUserUpdate): Promise<any> {
+  async update(id: string, { email, username }: IUserUpdate): Promise<IUserModel | null> {
     return await User.findByIdAndUpdate(id, { email, username, updated: Date.now() }, { new: true });
   }
 
   /**
-   * Remove
+   * Remove user from db by id
    *
    * @param {string} id
-   * @returns {Promise<any>}
+   * @returns {(Promise<IUserModel | null>)}
    * @memberof UserService
    */
-  async remove(id: string): Promise<any> {
+  async remove(id: string): Promise<IUserModel | null> {
     return await User.findByIdAndRemove(id);
   }
 
-  async checkPassword(username: string, password: string): Promise<any> {
+  /**
+   * Checks the password validity for an existing username.
+   *
+   * @param {string} username
+   * @param {string} password
+   * @returns {Promise<boolean>}
+   * @memberof UserService
+   */
+  async checkPassword(username: string, password: string): Promise<boolean> {
     const user = await User.findOne({ username });
     if (user) {
       return user.validatePassword(password);
     }
     return false;
+  }
+
+  /**
+   * Checks if the provided username or the email is already taken.
+   *
+   * @param {string} username
+   * @param {string} email
+   * @returns {Promise<boolean>}
+   * @memberof UserService
+   */
+  async userOrEmailExists(username: string, email: string): Promise<boolean> {
+    return await User.find().or([{ username }, { email }]).count() > 0;
   }
 }

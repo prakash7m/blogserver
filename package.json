@@ -22,11 +22,15 @@
   "devDependencies": {
     "@types/bcrypt": "^2.0.0",
     "@types/bcrypt-nodejs": "0.0.30",
+    "@types/cors": "^2.8.4",
     "@types/express-jwt": "0.0.40",
     "@types/express-session": "^1.15.10",
+    "@types/helmet": "0.0.38",
     "@types/jsonwebtoken": "^7.2.8",
     "@types/mongoose": "^5.2.0",
     "@types/node": "^10.5.2",
+    "@types/passport": "^0.4.5",
+    "@types/passport-local": "^1.0.33",
     "nodemon": "^1.17.5",
     "ts-node": "^7.0.0",
     "typescript": "^2.9.2"
@@ -36,15 +40,20 @@
     "@types/express": "^4.16.0",
     "bcrypt": "^3.0.0",
     "bluebird": "^3.5.1",
+    "cors": "^2.8.4",
     "express": "^4.16.3",
     "express-jwt": "^5.3.1",
     "express-session": "^1.15.6",
     "express-validator": "^5.2.0",
+    "helmet": "^3.12.1",
     "inversify": "^4.13.0",
     "inversify-express-utils": "^6.1.0",
     "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.2.2",
     "mongoose-paginate": "^5.0.3",
+    "passport": "^0.4.0",
+    "passport-facebook": "^2.1.1",
+    "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.12"
   }
 }

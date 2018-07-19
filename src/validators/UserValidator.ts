@@ -1,10 +1,13 @@
 import { check } from 'express-validator/check';
-import { BaseValidationMiddleware } from "./BaseValidationMiddleware";
+import { RequestHandler } from 'express';
 import { sanitizeParam } from 'express-validator/filter';
+
+import { BaseValidationMiddleware } from "./BaseValidationMiddleware";
 import { User } from "../models/UserModel";
 
+
 /**
- *
+ * User operation validator class. Has different static methods to validate fetch, list, create, update and remove
  *
  * @export
  * @class UserValidationMiddleware
@@ -12,27 +15,29 @@ import { User } from "../models/UserModel";
  */
 export class UserValidationMiddleware extends BaseValidationMiddleware {
   /**
-   *
+   * Validates if user exists before proceeding.
    *
    * @static
-   * @returns {*}
+   * @returns {RequestHandler[]}
    * @memberof UserValidationMiddleware
    */
-  public static fetch(): any {
+  public static fetch(): RequestHandler[] {
     return [
-      ...super.checkIdExists(User, 'User not found.'),
+      super.checkIdExists(User, 'User not found.'),
       super.sendErrors()
     ];
   }
 
   /**
-   *
+   * Validates the page parameter.
+   * Tries to cast the page to int if any.
+   * If invalid page parameter (optional), it prevents proceeding.
    *
    * @static
-   * @returns {*}
+   * @returns {RequestHandler[]}
    * @memberof UserValidationMiddleware
    */
-  public static list(): any {
+  public static list(): RequestHandler[] {
     return [
       sanitizeParam('page').toInt(),
       check('page').optional().isInt().withMessage("Invalid page parameter"),
@@ -41,13 +46,13 @@ export class UserValidationMiddleware extends BaseValidationMiddleware {
   }
 
   /**
-   *
+   * Validates the email, username and password before creating user.
    *
    * @static
-   * @returns {*}
+   * @returns {RequestHandler[]}
    * @memberof UserValidationMiddleware
    */
-  public static create(): any {
+  public static create(): RequestHandler[] {
     return [
       check('email').isEmail().withMessage("Not a valid email address"),
       check('username').isLength({ min: 5 }).withMessage("Should be min 5 characters"),
@@ -58,15 +63,15 @@ export class UserValidationMiddleware extends BaseValidationMiddleware {
   }
 
   /**
-   *
+   * Checks if user exists, and if yes, validates the update parameters before proceeding.
    *
    * @static
-   * @returns {*}
+   * @returns {RequestHandler[]}
    * @memberof UserValidationMiddleware
    */
-  public static update(): any {
+  public static update(): RequestHandler[] {
     return [
-      ...super.checkIdExists(User, 'User not found.'),
+      super.checkIdExists(User, 'User not found.'),
       check('email').isEmail().withMessage("Not a valid email address"),
       check('username').isLength({ min: 5 }).withMessage("Should be min 5 characters"),
       check('username').isAlphanumeric().withMessage("Should be alphanumeric"),
@@ -75,15 +80,15 @@ export class UserValidationMiddleware extends BaseValidationMiddleware {
   }
 
   /**
-   *
+   * Checks if user exists before removing.
    *
    * @static
-   * @returns {*}
+   * @returns {RequestHandler[]}
    * @memberof UserValidationMiddleware
    */
-  public static remove(): any {
+  public static remove(): RequestHandler[] {
     return [
-      ...super.checkIdExists(User, 'User not found.'),
+      super.checkIdExists(User, 'User not found.'),
       super.sendErrors()
     ];
   }
