@@ -1,7 +1,6 @@
 import { injectable } from "inversify";
 
-import { User, IUserModel } from "../models/UserModel";
-import { IUser, IUserUpdate } from '../models/UserModel';
+import { User, IUserModel, IUser, IUserUpdate } from "../models/UserModel";
 
 /**
  * User service: Basic user operations on the database

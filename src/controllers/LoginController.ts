@@ -42,9 +42,13 @@ export class LoginController extends BaseHttpController {
   public async login(req: Request, res: Response, next: NextFunction) {
     try {
       const result = await this.authService.login(req, res);
-      res.status(200).json({success: true, message: "Authentication success"});
+      if (req.user) {
+        res.status(200).json({ data: this.authService.getUserInfo(req), message: "Authentication success" });
+      } else {
+        res.status(401).json({ message: "Authentication failed" });
+      }
     } catch (err) {
-      res.status(401).json({success: false, message: "Authentication failed"});
+      res.status(401).json({ message: "Authentication failed" });
     }
   }
 
@@ -57,8 +61,32 @@ export class LoginController extends BaseHttpController {
    * @memberof LoginController
    */
   @httpGet("/logout")
-  public async logout(req: Request, res: Response, next: NextFunction) {
-    req.logOut();
-    res.status(200).json({ success: true })
+  public async logout(req: any, res: Response, next: NextFunction) {
+    
+    // req.logout();
+    try {
+      await this.authService.logout(req, res);
+      
+      res.status(200).clearCookie('connect.sid', {path: '/'}).json({ message: "Logged out successfully" });
+    } catch (err) {
+      res.status(400).json({ message: "Unable to logout" });
+    }
+
+    
+    // try {
+    //   await req.logOut();
+    //   res.status(200).json({ message: "Logged out successfully" });
+    // } catch (err) {
+    //   res.status(400).json({ message: "Logged out failed" });
+    // }
+  }
+
+  @httpGet("/isauthenticated")
+  public async isauthenticated(req: Request, res: Response, next: NextFunction) {
+    if (await req.isAuthenticated()) {
+      res.status(200).json({ data: this.authService.getUserInfo(req) })
+    } else {
+      res.status(401).json({ message: "Not authenticated" })
+    }
   }
 }

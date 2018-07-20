@@ -2,10 +2,14 @@ import helmet from "helmet";
 import bodyParser from "body-parser";
 import session from 'express-session';
 import cors from "cors";
+import cookieParser from "cookie-parser";
+import connectMongo from "connect-mongo";
+import mongoose from "mongoose";
 
-import { sessionSecret, corsEnableFor } from './config';
+import { sessionSecret, sessionMaxAge, corsEnableFor } from './config';
 import { passportInit } from './passport';
 
+const MongoStore = connectMongo(session);
 /**
  * Configure the express app with various middlewares
  *
@@ -17,6 +21,10 @@ export const appConfig = function (app: any) {
    */
   var corsOptions = {
     origin: corsEnableFor,
+
+    // Credentials true is required for the cookie to be set in the browser
+    // and send back to the request.    
+    credentials: true,
     optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
   }
   app.use(cors(corsOptions));
@@ -25,6 +33,8 @@ export const appConfig = function (app: any) {
    * More details at https://github.com/helmetjs/helmet
    */
   app.use(helmet());
+
+  app.use(cookieParser());
 
   /**
    * Use body parser to parse the request body
@@ -43,9 +53,10 @@ export const appConfig = function (app: any) {
    */
   const sess = {
     secret: sessionSecret,
-    resave: true,
+    resave: false,
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
     saveUninitialized: false,
-    cookie: { secure: false }
+    cookie: { secure: false, maxAge: sessionMaxAge * 1000 }
   };
   if (app.get('env') === 'production') {
     app.set('trust proxy', 1);

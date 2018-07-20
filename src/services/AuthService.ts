@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import passport from "passport";
 import { injectable } from "inversify";
+import { IUserModel } from '../models/UserModel';
+import { resolve } from "dns";
 
 /**
  * Authentication service to perform login and logout etc
@@ -31,5 +33,23 @@ export class AuthService {
         });
       })(req, res);
     });
+  }
+
+  async logout(req: any, res: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      req.logOut();
+      req.user = null;
+      if (req.session && req.session.destroy) {
+        req.session.destroy(function (err: any) {
+          if (err) { reject(); }          
+          return resolve();
+        })
+      }
+    });
+  }
+
+  getUserInfo(req: Request) {
+    const { username, email } = <IUserModel>req.user
+    return { username, email };
   }
 }
