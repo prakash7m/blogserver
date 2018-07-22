@@ -1,6 +1,6 @@
 import passport from "passport";
 import passportLocal from "passport-local";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, RequestHandler } from "express";
 
 import { User, IUserModel } from "../models/UserModel";
 
@@ -51,7 +51,7 @@ export const passportInit = (app: any) => {
  * Middleware to check if a user is athenticated
  * Use this middleware in the controller to require authentication
  */
-export const authRequired = () => {
+export const authRequired = (): RequestHandler => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (req.isAuthenticated()) {
       return next();

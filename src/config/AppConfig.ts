@@ -68,4 +68,12 @@ export const appConfig = function (app: any) {
    * Initialize the passport authentication middlewares
    */
   passportInit(app);
+
+  /**
+   * Error handler middleware
+   */
+  app.use(function (err, req, res, next) {
+    console.error(err.stack)
+    res.status(500).send('Something broke!')
+  })
 }

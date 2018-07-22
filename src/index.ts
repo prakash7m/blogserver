@@ -17,6 +17,11 @@ import { AuthService } from "./services/AuthService";
  * Connect to mongo db.
  */
 mongoose.connect(mongoDBURL, { useNewUrlParser: true });
+mongoose.connection
+  .once('open', () => console.log('Connected to db.'))
+  .on('error', (error) => {
+    console.warn('Failed to connect to db: ', error);
+  });
 
 // set up container
 let container = new Container();

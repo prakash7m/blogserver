@@ -45,10 +45,10 @@ export class LoginController extends BaseHttpController {
       if (req.user) {
         res.status(200).json({ data: this.authService.getUserInfo(req), message: "Authentication success" });
       } else {
-        res.status(401).json({ message: "Authentication failed" });
+        res.status(400).json({ message: "Authentication failed" });
       }
     } catch (err) {
-      res.status(401).json({ message: "Authentication failed" });
+      res.status(400).json({ message: "Authentication failed" });
     }
   }
 
@@ -86,7 +86,7 @@ export class LoginController extends BaseHttpController {
     if (await req.isAuthenticated()) {
       res.status(200).json({ data: this.authService.getUserInfo(req) })
     } else {
-      res.status(401).json({ message: "Not authenticated" })
+      res.status(401).json({ data: false, message: "Not authenticated" })
     }
   }
 }
