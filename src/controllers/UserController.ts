@@ -40,10 +40,17 @@ export class UserController extends BaseHttpController {
   public async list(req: Request, res: Response) {
     try {
       const list = await this.userService.list(req.query.page);
+      await this.sleep(1000);
       res.status(200).json({ rows: list });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));
     }
+  }
+
+  async sleep(ms) {
+    return new Promise(resolve => {
+      setTimeout(resolve, ms)
+    })
   }
 
   /**
