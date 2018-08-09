@@ -8,6 +8,7 @@ import mongoose from "mongoose";
 
 import { sessionSecret, sessionMaxAge, corsEnableFor } from './config';
 import { passportInit } from './passport';
+import { Request, Response, NextFunction } from "express";
 
 const MongoStore = connectMongo(session);
 /**
@@ -72,7 +73,7 @@ export const appConfig = function (app: any) {
   /**
    * Error handler middleware
    */
-  app.use(function (err, req, res, next) {
+  app.use(function (err: Error, req: Request, res: Response, next: NextFunction) {
     console.error(err.stack)
     res.status(500).send('Something broke!')
   })

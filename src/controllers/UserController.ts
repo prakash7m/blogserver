@@ -57,7 +57,7 @@ export class UserController extends BaseHttpController {
   public async fetch(req: Request, res: Response) {
     try {
       const item = await this.userService.fetch(req.params.id);
-      res.status(200).json({ data: item });
+      res.status(200).json({ data: this.filter(item) });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));
     }
@@ -74,7 +74,7 @@ export class UserController extends BaseHttpController {
   public async create(req: Request, res: Response) {
     try {
       const user = await this.userService.create(req.body);
-      res.status(200).json({ data: user });
+      res.status(200).json({ data: this.filter(user) });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));
     }
@@ -91,7 +91,7 @@ export class UserController extends BaseHttpController {
   public async update(req: Request, res: Response) {
     try {
       const user = await this.userService.update(req.params.id, req.body);
-      res.status(200).json({ data: user });
+      res.status(200).json({ data: this.filter(user) });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));
     }
@@ -108,9 +108,14 @@ export class UserController extends BaseHttpController {
   public async remove(req: Request, res: Response) {
     try {
       const user = await this.userService.remove(req.params.id);
-      res.status(200).json({ data: user });
+      res.status(200).json({ data: this.filter(user) });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));
     }
+  }
+
+  private filter(user) {
+    const { _id, username, email, created, updated } = user;
+    return { _id, username, email, created, updated };
   }
 }

@@ -29,7 +29,7 @@ export class UserService {
    * @memberof UserService
    */
   async list(page?: number): Promise<IUserModel[]> {
-    return await User.find();
+    return await User.find({}, {_id: true, username: true, email: true, created: true, updated: true});
   }
 
   /**
