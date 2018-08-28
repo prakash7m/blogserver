@@ -8,7 +8,7 @@ import { LoginValidatorMiddleware } from "../validators/LoginValidator";
 import { AuthService } from "../services/AuthService";
 
 /**
- *
+ * The login controller class for authetication related functions
  *
  * @export
  * @class LoginController
