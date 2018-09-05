@@ -1,6 +1,8 @@
 import { injectable } from "inversify";
 
 import { Gallery, IGalleryModel } from "../models/GalleryModel";
+import { Request } from "express";
+import { resolve } from "dns";
 
 /**
  * Gallery service: Basic gallery operations on the database
@@ -17,8 +19,23 @@ export class GalleryService {
    * @returns {Promise<IGalleryModel[]>}
    * @memberof GalleryService
    */
-  async create({ name, filename, path, thumbnail }: IGalleryModel): Promise<IGalleryModel> {
-    return await Gallery.create({ name, filename, path, thumbnail });
+  async create(req: any): Promise<IGalleryModel> {    
+    let result;
+    console.log(typeof(req.files.file))
+    if (req.files.file instanceof Array) {
+      console.log('hi')
+      for (let file of req.files.file) {
+        console.log(file);
+        result = await file.mv('src/media/' + file.name);
+      }
+    } else {
+      const file = req.files.file;
+      result = await file.mv('src/media/' + file.name);
+    }
+
+    return result; 
+    
+    // return await Gallery.create({ name, filename, path, thumbnail });
   }
 
   /**

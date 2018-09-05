@@ -81,10 +81,11 @@ export class GalleryController extends BaseHttpController {
   @httpPost("/", ...GalleryValidationMiddleware.create())
   public async create(req: Request, res: Response) {
     try {
-      const gallery = await this.galleryService.create(req.body);
+      const gallery = await this.galleryService.create(req);
       await this.sleep(2000);
       res.status(200).json({ data: this.filter(gallery) });
     } catch (err) {
+      console.log(err);
       res.status(400).json(this.errorHandler.handle(err));
     }
   }
@@ -125,8 +126,7 @@ export class GalleryController extends BaseHttpController {
     }
   }
 
-  private filter(gallery) {
-    const { _id, galleryname, email, created, updated } = gallery;
-    return { _id, galleryname, email, created, updated };
+  private filter(gallery) {    
+    return gallery;
   }
 }

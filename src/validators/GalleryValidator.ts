@@ -54,8 +54,6 @@ export class GalleryValidationMiddleware extends BaseValidationMiddleware {
    */
   public static create(): RequestHandler[] {
     return [      
-      check('name').isLength({ min: 2 }).withMessage("Should be min 2 characters"),
-      check('name').isAlphanumeric().withMessage("Should be alphanumeric"),      
       super.sendErrors()
     ];
   }

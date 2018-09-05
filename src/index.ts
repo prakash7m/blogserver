@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 
 import "./controllers/UserController";
 import "./controllers/LoginController";
+import "./controllers/GalleryController";
 
 import { UserService } from './services/UserService';
 import { ErrorHandler } from './lib/ErrorHandler';
@@ -12,6 +13,7 @@ import { ValidationErrorHandler } from './lib/ValidationErrorHandler';
 import { appConfig } from './config/AppConfig';
 import { mongoDBURL } from "./config/config";
 import { AuthService } from "./services/AuthService";
+import { GalleryService } from "./services/GalleryService";
 
 /**
  * Connect to mongo db.
@@ -31,6 +33,7 @@ container.bind<UserService>('UserService').to(UserService);
 container.bind<ErrorHandler>('ErrorHandler').to(ErrorHandler);
 container.bind<ValidationErrorHandler>('ValidationErrorHandler').to(ValidationErrorHandler);
 container.bind<AuthService>('AuthService').to(AuthService);
+container.bind<GalleryService>('GalleryService').to(GalleryService);
 
 
 /**

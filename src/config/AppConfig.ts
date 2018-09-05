@@ -5,6 +5,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import connectMongo from "connect-mongo";
 import mongoose from "mongoose";
+import fileUpload  from "express-fileupload";
 
 import { sessionSecret, sessionMaxAge, corsEnableFor } from './config';
 import { passportInit } from './passport';
@@ -70,6 +71,7 @@ export const appConfig = function (app: any) {
    */
   passportInit(app);
 
+  app.use(fileUpload());
   /**
    * Error handler middleware
    */
