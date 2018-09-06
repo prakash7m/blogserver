@@ -42,12 +42,6 @@ export const GallerySchema: Schema = new Schema({
     required: true,
     trim: true
   },
-  thumbnail: {
-    type: String,
-    unique: true,
-    required: true,
-    trim: true
-  },
   tags: {
     type: [String]
   },
@@ -63,8 +57,4 @@ export const GallerySchema: Schema = new Schema({
   }
 });
 
-GallerySchema.pre('save', async function (this: any, next) {
-  // create/update thumbnail if image is updated
-});
-
-export const Gallery: Model<IGalleryModel> = model<IGalleryModel>('Gallery', GallerySchema);
+export const Gallery: Model<IGalleryModel> = model<IGalleryModel>('Media', GallerySchema);
