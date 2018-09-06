@@ -23,13 +23,15 @@ export class GalleryService {
     let result: IGalleryModel[] = [], filename, rand = () => Math.ceil(Math.random() * 1000000000);
     if (req.files.file instanceof Array) {
       for (let file of req.files.file) {
-        await file.mv('src/media/' + this.makeFilename(file));
-        result.push(await this.insertNewMedia(file));
+        filename = this.makeFilename(file);
+        await file.mv('src/media/' + filename);
+        result.push(await this.insertNewMedia(file, filename));
       }
     } else {
       const file = req.files.file;
-      await file.mv('src/media/' + this.makeFilename(file));
-      result.push(await this.insertNewMedia(file));
+      filename = this.makeFilename(file);
+      await file.mv('src/media/' + filename);
+      result.push(await this.insertNewMedia(file, filename));
     }
 
     return result; 
@@ -38,13 +40,13 @@ export class GalleryService {
   }
 
   makeFilename (file) {
-    return file.md5 + '-' + Math.ceil(Math.random() * 10000000000) + '-' + file.name.replace(/[^a-zA-Z0-9_\-\.]/g, '');
+    return Math.ceil(Math.random() * 10000000000) + '-' + Math.ceil(Math.random() * 10000000000) + '-' + file.name.replace(/[^a-zA-Z0-9_\-\.]/g, '');
   }
 
-  async insertNewMedia(file) {
+  async insertNewMedia(file, filename) {
     return await Gallery.create({
       name: 'New Media',
-      filename: this.makeFilename(file)
+      filename: filename
     });
   }
 
