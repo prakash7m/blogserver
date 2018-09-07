@@ -71,7 +71,10 @@ export const appConfig = function (app: any) {
    */
   passportInit(app);
 
-  app.use(fileUpload());
+  app.use(fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 },
+    safeFileNames: true
+  }));
   /**
    * Error handler middleware
    */
