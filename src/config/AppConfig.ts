@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import connectMongo from "connect-mongo";
 import mongoose from "mongoose";
 import fileUpload  from "express-fileupload";
+import qt from "quickthumb";
 
 import { sessionSecret, sessionMaxAge, corsEnableFor } from './config';
 import { passportInit } from './passport';
@@ -75,6 +76,7 @@ export const appConfig = function (app: any) {
     limits: { fileSize: 50 * 1024 * 1024 },
     safeFileNames: true
   }));
+  app.use('/media', qt.static(__dirname + '/../media/'));
   /**
    * Error handler middleware
    */

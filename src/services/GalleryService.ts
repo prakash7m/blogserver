@@ -19,23 +19,35 @@ export class GalleryService {
    * @returns {Promise<IGalleryModel[]>}
    * @memberof GalleryService
    */
-  async create(req: any): Promise<IGalleryModel> {    
-    let result;
-    console.log(typeof(req.files.file))
+  async create(req: any): Promise<IGalleryModel[]> {    
+    let result: IGalleryModel[] = [], filename, rand = () => Math.ceil(Math.random() * 1000000000);
     if (req.files.file instanceof Array) {
-      console.log('hi')
       for (let file of req.files.file) {
-        console.log(file);
-        result = await file.mv('src/media/' + file.name);
+        filename = this.makeFilename(file);
+        await file.mv('src/media/' + filename);
+        result.push(await this.insertNewMedia(file, filename));
       }
     } else {
       const file = req.files.file;
-      result = await file.mv('src/media/' + file.name);
+      filename = this.makeFilename(file);
+      await file.mv('src/media/' + filename);
+      result.push(await this.insertNewMedia(file, filename));
     }
 
     return result; 
     
     // return await Gallery.create({ name, filename, path, thumbnail });
+  }
+
+  makeFilename (file) {
+    return Math.ceil(Math.random() * 10000000000) + '-' + Math.ceil(Math.random() * 10000000000) + '-' + file.name.replace(/[^a-zA-Z0-9_\-\.]/g, '');
+  }
+
+  async insertNewMedia(file, filename) {
+    return await Gallery.create({
+      name: 'New Media',
+      filename: filename
+    });
   }
 
   /**
