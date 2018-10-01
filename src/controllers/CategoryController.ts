@@ -2,28 +2,28 @@ import { controller, BaseHttpController, httpPost, httpGet, httpPut, httpDelete 
 import { inject } from "inversify";
 import { Request, Response } from "express";
 
-import { GalleryService } from "../services/GalleryService";
+import { CategoryService } from "../services/CategoryService";
 import { ErrorHandler } from "../lib/ErrorHandler";
-import { GalleryValidationMiddleware } from "../validators/GalleryValidator";
+import { CategoryValidationMiddleware } from "../validators/CategoryValidator";
 import { authRequired } from "../config/passport";
 
 /**
- * The gallery controller
+ * The category controller
  *
  * @export
- * @class GalleryController
+ * @class CategoryController
  * @extends {BaseHttpController}
  */
-@controller("/api/gallery", authRequired())
-export class GalleryController extends BaseHttpController {
+@controller("/api/category", authRequired())
+export class CategoryController extends BaseHttpController {
   /**
-   * Creates an instance of GalleryController.
-   * @param {GalleryService} galleryService
+   * Creates an instance of CategoryController.
+   * @param {CategoryService} categoryService
    * @param {ErrorHandler} errorHandler
-   * @memberof GalleryController
+   * @memberof CategoryController
    */
   constructor(
-    @inject('GalleryService') private galleryService: GalleryService,
+    @inject('CategoryService') private categoryService: CategoryService,
     @inject('ErrorHandler') private errorHandler: ErrorHandler
   ) {
     super();
@@ -34,12 +34,12 @@ export class GalleryController extends BaseHttpController {
    *
    * @param {Request} req
    * @param {Response} res
-   * @memberof GalleryController
+   * @memberof CategoryController
    */
-  @httpGet("/", ...GalleryValidationMiddleware.list())
+  @httpGet("/", ...CategoryValidationMiddleware.list())
   public async list(req: Request, res: Response) {
     try {
-      const list = await this.galleryService.list(req.query.page);
+      const list = await this.categoryService.list(req.query.page);
       await this.sleep(2000);
       res.status(200).json({ rows: list });
     } catch (err) {
@@ -58,12 +58,12 @@ export class GalleryController extends BaseHttpController {
    *
    * @param {Request} req
    * @param {Response} res
-   * @memberof GalleryController
+   * @memberof CategoryController
    */
-  @httpGet("/:id", ...GalleryValidationMiddleware.fetch())
+  @httpGet("/:id", ...CategoryValidationMiddleware.fetch())
   public async fetch(req: Request, res: Response) {
     try {
-      const item = await this.galleryService.fetch(req.params.id);
+      const item = await this.categoryService.fetch(req.params.id);
       await this.sleep(2000);
       res.status(200).json({ data: this.filter(item) });
     } catch (err) {
@@ -76,16 +76,15 @@ export class GalleryController extends BaseHttpController {
    *
    * @param {Request} req
    * @param {Response} res
-   * @memberof GalleryController
+   * @memberof CategoryController
    */
-  @httpPost("/", ...GalleryValidationMiddleware.create())
+  @httpPost("/", ...CategoryValidationMiddleware.create())
   public async create(req: Request, res: Response) {
     try {
-      const gallery = await this.galleryService.create(req);
+      const category = await this.categoryService.create(req.body);
       await this.sleep(2000);
-      res.status(200).json({ data: this.filter(gallery) });
+      res.status(200).json({ data: this.filter(category) });
     } catch (err) {
-      console.log(err);
       res.status(400).json(this.errorHandler.handle(err));
     }
   }
@@ -95,17 +94,14 @@ export class GalleryController extends BaseHttpController {
    *
    * @param {Request} req
    * @param {Response} res
-   * @memberof GalleryController
+   * @memberof CategoryController
    */
-  @httpPut("/:id", ...GalleryValidationMiddleware.update())
+  @httpPut("/:id", ...CategoryValidationMiddleware.update())
   public async update(req: Request, res: Response) {
     try {
-      console.log(req.body.tags)
-      //req.body.tags = req.body.tags.split(",").map(tag => tag.trim());
-      console.log(req.body.tags)
-      const gallery = await this.galleryService.update(req.params.id, req.body);
+      const category = await this.categoryService.update(req.params.id, req.body);
       await this.sleep(2000);
-      res.status(200).json({ data: this.filter(gallery) });
+      res.status(200).json({ data: this.filter(category) });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));
     }
@@ -116,20 +112,21 @@ export class GalleryController extends BaseHttpController {
    *
    * @param {Request} req
    * @param {Response} res
-   * @memberof GalleryController
+   * @memberof CategoryController
    */
-  @httpDelete("/:id", ...GalleryValidationMiddleware.remove())
+  @httpDelete("/:id", ...CategoryValidationMiddleware.remove())
   public async remove(req: Request, res: Response) {
     try {
-      const gallery = await this.galleryService.remove(req.params.id);
+      const category = await this.categoryService.remove(req.params.id);
       await this.sleep(2000);
-      res.status(200).json({ data: this.filter(gallery) });
+      res.status(200).json({ data: this.filter(category) });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));
     }
   }
 
-  private filter(gallery) {    
-    return gallery;
+  private filter(category) {
+    const { _id, name, description, created, updated } = category;
+    return { _id, name, description, created, updated };
   }
 }

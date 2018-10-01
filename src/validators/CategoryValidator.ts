@@ -3,27 +3,27 @@ import { RequestHandler } from 'express';
 import { sanitizeParam } from 'express-validator/filter';
 
 import { BaseValidationMiddleware } from "./BaseValidationMiddleware";
-import { Gallery } from "../models/GalleryModel";
+import { Category } from "../models/CategoryModel";
 
 
 /**
- * Gallery operation validator class. Has different static methods to validate fetch, list, create, update and remove
+ * Category operation validator class. Has different static methods to validate fetch, list, create, update and remove
  *
  * @export
- * @class GalleryValidationMiddleware
+ * @class CategoryValidationMiddleware
  * @extends {BaseValidationMiddleware}
  */
-export class GalleryValidationMiddleware extends BaseValidationMiddleware {
+export class CategoryValidationMiddleware extends BaseValidationMiddleware {
   /**
-   * Validates if gallery exists before proceeding.
+   * Validates if category exists before proceeding.
    *
    * @static
    * @returns {RequestHandler[]}
-   * @memberof GalleryValidationMiddleware
+   * @memberof CategoryValidationMiddleware
    */
   public static fetch(): RequestHandler[] {
     return [
-      super.checkIdExists(Gallery, 'Gallery not found.'),
+      super.checkIdExists(Category, 'Category not found.'),
       super.sendErrors()
     ];
   }
@@ -35,7 +35,7 @@ export class GalleryValidationMiddleware extends BaseValidationMiddleware {
    *
    * @static
    * @returns {RequestHandler[]}
-   * @memberof GalleryValidationMiddleware
+   * @memberof CategoryValidationMiddleware
    */
   public static list(): RequestHandler[] {
     return [
@@ -46,43 +46,44 @@ export class GalleryValidationMiddleware extends BaseValidationMiddleware {
   }
 
   /**
-   * Validates the filename, name.
+   * Validates the name, description
    *
    * @static
    * @returns {RequestHandler[]}
-   * @memberof GalleryValidationMiddleware
+   * @memberof CategoryValidationMiddleware
    */
   public static create(): RequestHandler[] {
-    return [      
-      super.sendErrors()
-    ];
-  }
-
-  /**
-   * Checks if gallery exists, and if yes, validates the update parameters before proceeding.
-   *
-   * @static
-   * @returns {RequestHandler[]}
-   * @memberof GalleryValidationMiddleware
-   */
-  public static update(): RequestHandler[] {
     return [
-      super.checkIdExists(Gallery, 'Gallery not found.'),
       check('name').isLength({ min: 2 }).withMessage("Should be min 2 characters"),
       super.sendErrors()
     ];
   }
 
   /**
-   * Checks if gallery exists before removing.
+   * Checks if user exists, and if yes, validates the update parameters before proceeding.
    *
    * @static
    * @returns {RequestHandler[]}
-   * @memberof GalleryValidationMiddleware
+   * @memberof CategoryValidationMiddleware
+   */
+  public static update(): RequestHandler[] {
+    return [
+      super.checkIdExists(Category, 'Category not found.'),      
+      check('name').isLength({ min: 2 }).withMessage("Should be min 2 characters"),
+      super.sendErrors()
+    ];
+  }
+
+  /**
+   * Checks if category exists before removing.
+   *
+   * @static
+   * @returns {RequestHandler[]}
+   * @memberof CategoryValidationMiddleware
    */
   public static remove(): RequestHandler[] {
     return [
-      super.checkIdExists(Gallery, 'Gallery not found.'),
+      super.checkIdExists(Category, 'Category not found.'),
       super.sendErrors()
     ];
   }
