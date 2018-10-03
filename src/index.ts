@@ -7,6 +7,7 @@ import "./controllers/UserController";
 import "./controllers/LoginController";
 import "./controllers/GalleryController";
 import "./controllers/CategoryController";
+import "./controllers/PostController";
 
 import { UserService } from './services/UserService';
 import { ErrorHandler } from './lib/ErrorHandler';
@@ -16,6 +17,7 @@ import { mongoDBURL } from "./config/config";
 import { AuthService } from "./services/AuthService";
 import { GalleryService } from "./services/GalleryService";
 import { CategoryService } from "./services/CategoryService";
+import { PostService } from "./services/PostService";
 
 /**
  * Connect to mongo db.
@@ -37,6 +39,7 @@ container.bind<ValidationErrorHandler>('ValidationErrorHandler').to(ValidationEr
 container.bind<AuthService>('AuthService').to(AuthService);
 container.bind<GalleryService>('GalleryService').to(GalleryService);
 container.bind<CategoryService>('CategoryService').to(CategoryService);
+container.bind<PostService>('PostService').to(PostService);
 
 
 /**
