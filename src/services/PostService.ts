@@ -17,8 +17,11 @@ export class PostService {
    * @returns {Promise<IPostModel[]>}
    * @memberof PostService
    */
-  async create({ }: IPostModel): Promise<IPostModel> {
-    return await Post.create({ });
+  async create(model: IPostModel): Promise<IPostModel> {
+    let { title, synopsis, slug, hero, content, category, active, meta, readtime } = model;
+    return await Post.create({
+      title, synopsis, slug, hero, content, category, active, meta, readtime
+    });
   }
 
   /**
@@ -29,7 +32,8 @@ export class PostService {
    * @memberof PostService
    */
   async list(page?: number): Promise<IPostModel[]> {
-    return await Post.find({}, {_id: true, title: true, synopsis: true, created: true, updated: true});
+    return await Post.find({}, {_id: true, title: true, synopsis: true, slug: true, content: true, hero: true,
+      category: true, active: true, meta: true, readtime: true, created: true, updated: true});
   }
 
   /**
@@ -51,8 +55,10 @@ export class PostService {
    * @returns {Promise<IPostModel | null>}
    * @memberof PostService
    */
-  async update(id: string, { }: IPostModel): Promise<IPostModel | null> {
-    return await Post.findByIdAndUpdate(id, { updated: Date.now() }, { new: true });
+  async update(id: string, model: IPostModel): Promise<IPostModel | null> {
+    let { title, synopsis, slug, hero, category, content, active, meta, readtime } = model;
+    return await Post.findByIdAndUpdate(id, {
+      title, synopsis, slug, hero, category, content, active, meta, readtime, updated: Date.now() }, { new: true });
   }
 
   /**
@@ -67,14 +73,14 @@ export class PostService {
   }
 
   /**
-   * Checks if the provided postname or the email is already taken.
+   * Checks if the provided post is already taken.
    *
    * @param {string} postname
    * @param {string} email
    * @returns {Promise<boolean>}
    * @memberof PostService
    */
-  async postOrEmailExists(slug: string): Promise<boolean> {
+  async postExists(slug: string): Promise<boolean> {
     return await Post.find({slug: slug}).count() > 0;
   }
 }

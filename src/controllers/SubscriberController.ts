@@ -2,28 +2,28 @@ import { controller, BaseHttpController, httpPost, httpGet, httpPut, httpDelete 
 import { inject } from "inversify";
 import { Request, Response } from "express";
 
-import { PostService } from "../services/PostService";
+import { SubscriberService } from "../services/SubscriberService";
 import { ErrorHandler } from "../lib/ErrorHandler";
-import { PostValidationMiddleware } from "../validators/PostValidator";
+import { SubscriberValidationMiddleware } from "../validators/SubscriberValidator";
 import { authRequired } from "../config/passport";
 
 /**
- * The post controller
+ * The subscriber controller
  *
  * @export
- * @class PostController
+ * @class SubscriberController
  * @extends {BaseHttpController}
  */
-@controller("/api/post", authRequired())
-export class PostController extends BaseHttpController {
+@controller("/api/subscriber", authRequired())
+export class SubscriberController extends BaseHttpController {
   /**
-   * Creates an instance of PostController.
-   * @param {PostService} postService
+   * Creates an instance of SubscriberController.
+   * @param {SubscriberService} subscriberService
    * @param {ErrorHandler} errorHandler
-   * @memberof PostController
+   * @memberof SubscriberController
    */
   constructor(
-    @inject('PostService') private postService: PostService,
+    @inject('SubscriberService') private subscriberService: SubscriberService,
     @inject('ErrorHandler') private errorHandler: ErrorHandler
   ) {
     super();
@@ -34,12 +34,12 @@ export class PostController extends BaseHttpController {
    *
    * @param {Request} req
    * @param {Response} res
-   * @memberof PostController
+   * @memberof SubscriberController
    */
-  @httpGet("/", ...PostValidationMiddleware.list())
+  @httpGet("/", ...SubscriberValidationMiddleware.list())
   public async list(req: Request, res: Response) {
     try {
-      const list = await this.postService.list(req.query.page);
+      const list = await this.subscriberService.list(req.query.page);
       await this.sleep(2000);
       res.status(200).json({ rows: list });
     } catch (err) {
@@ -58,12 +58,12 @@ export class PostController extends BaseHttpController {
    *
    * @param {Request} req
    * @param {Response} res
-   * @memberof PostController
+   * @memberof SubscriberController
    */
-  @httpGet("/:id", ...PostValidationMiddleware.fetch())
+  @httpGet("/:id", ...SubscriberValidationMiddleware.fetch())
   public async fetch(req: Request, res: Response) {
     try {
-      const item = await this.postService.fetch(req.params.id);
+      const item = await this.subscriberService.fetch(req.params.id);
       await this.sleep(2000);
       res.status(200).json({ data: this.filter(item) });
     } catch (err) {
@@ -76,14 +76,14 @@ export class PostController extends BaseHttpController {
    *
    * @param {Request} req
    * @param {Response} res
-   * @memberof PostController
+   * @memberof SubscriberController
    */
-  @httpPost("/", ...PostValidationMiddleware.create())
+  @httpPost("/", ...SubscriberValidationMiddleware.create())
   public async create(req: Request, res: Response) {
     try {
-      const post = await this.postService.create(req.body);
+      const subscriber = await this.subscriberService.create(req.body);
       await this.sleep(2000);
-      res.status(200).json({ data: this.filter(post) });
+      res.status(200).json({ data: this.filter(subscriber) });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));
     }
@@ -94,14 +94,14 @@ export class PostController extends BaseHttpController {
    *
    * @param {Request} req
    * @param {Response} res
-   * @memberof PostController
+   * @memberof SubscriberController
    */
-  @httpPut("/:id", ...PostValidationMiddleware.update())
+  @httpPut("/:id", ...SubscriberValidationMiddleware.update())
   public async update(req: Request, res: Response) {
     try {
-      const post = await this.postService.update(req.params.id, req.body);
+      const subscriber = await this.subscriberService.update(req.params.id, req.body);
       await this.sleep(2000);
-      res.status(200).json({ data: this.filter(post) });
+      res.status(200).json({ data: this.filter(subscriber) });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));
     }
@@ -112,20 +112,21 @@ export class PostController extends BaseHttpController {
    *
    * @param {Request} req
    * @param {Response} res
-   * @memberof PostController
+   * @memberof SubscriberController
    */
-  @httpDelete("/:id", ...PostValidationMiddleware.remove())
+  @httpDelete("/:id", ...SubscriberValidationMiddleware.remove())
   public async remove(req: Request, res: Response) {
     try {
-      const post = await this.postService.remove(req.params.id);
+      const subscriber = await this.subscriberService.remove(req.params.id);
       await this.sleep(2000);
-      res.status(200).json({ data: this.filter(post) });
+      res.status(200).json({ data: this.filter(subscriber) });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));
     }
   }
 
-  private filter(post) {    
-    return post;
+  private filter(subscriber) {
+    const { _id, name, email, subscribed, created, updated } = subscriber;
+    return { _id, name, email, subscribed, created, updated };
   }
 }

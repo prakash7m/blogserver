@@ -54,18 +54,4 @@ export const PostSchema: Schema = new Schema({
   views: { type: Number }
 });
 
-PostSchema.pre('save', async function (this: any, next) {
-  try {
-    const hash = await bcrypt.hash(this.password, 10);
-    this.password = hash;
-    next();
-  } catch (err) {
-    next(err);
-  }
-});
-
-PostSchema.methods.validatePassword = async function (password: string): Promise<boolean> {
-  return await bcrypt.compare(password, this.password);
-}
-
 export const Post: Model<IPostModel> = model<IPostModel>('Post', PostSchema);
