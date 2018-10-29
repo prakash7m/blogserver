@@ -1,6 +1,8 @@
 import { injectable } from "inversify";
 
 import { Post, IPostModel } from "../models/PostModel";
+import { ObjectId } from "mongodb";
+import mongoose from 'mongoose';
 
 /**
  * Post service: Basic post operations on the database
@@ -44,7 +46,16 @@ export class PostService {
    * @memberof PostService
    */
   async fetch(id: string): Promise<IPostModel | null> {
-    return await Post.findById(id);
+    console.log(id)
+    console.log('hi')
+    console.log(mongoose.Types.ObjectId.isValid(id))
+    console.log('hello')
+    console.log(mongoose.Types.ObjectId.isValid(id))
+    if (mongoose.Types.ObjectId.isValid(id)) {
+      return await Post.findById(id);  
+    } else {
+      return await Post.findOne({slug: id});
+    }    
   }
 
   /**

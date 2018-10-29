@@ -23,7 +23,7 @@ export class PostValidationMiddleware extends BaseValidationMiddleware {
    */
   public static fetch(): RequestHandler[] {
     return [
-      super.checkIdExists(Post, 'Post not found.'),
+      //super.checkIdExists(Post, 'Post not found.'),
       super.sendErrors()
     ];
   }

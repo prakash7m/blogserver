@@ -63,6 +63,7 @@ export class PostController extends BaseHttpController {
   @httpGet("/:id", ...PostValidationMiddleware.fetch())
   public async fetch(req: Request, res: Response) {
     try {
+      console.log(req.params.id)
       const item = await this.postService.fetch(req.params.id);
       await this.sleep(2000);
       res.status(200).json({ data: this.filter(item) });

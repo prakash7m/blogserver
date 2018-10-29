@@ -23,7 +23,13 @@ export const appConfig = function (app: any) {
    * Enable the cors access to the defined frontend
    */
   var corsOptions = {
-    origin: corsEnableFor,
+    origin: function (origin, callback) {
+      if (corsEnableFor.indexOf(origin) !== -1 || !origin) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
 
     // Credentials true is required for the cookie to be set in the browser
     // and send back to the request.    
