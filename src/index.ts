@@ -10,6 +10,8 @@ import "./controllers/CategoryController";
 import "./controllers/PostController";
 import "./controllers/SubscriberController";
 
+import "./controllers/FrontController";
+
 import { UserService } from './services/UserService';
 import { ErrorHandler } from './lib/ErrorHandler';
 import { ValidationErrorHandler } from './lib/ValidationErrorHandler';

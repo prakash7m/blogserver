@@ -6,6 +6,7 @@ import { GalleryService } from "../services/GalleryService";
 import { ErrorHandler } from "../lib/ErrorHandler";
 import { GalleryValidationMiddleware } from "../validators/GalleryValidator";
 import { authRequired } from "../config/passport";
+import { Utils } from "../lib/Utils";
 
 /**
  * The gallery controller
@@ -40,17 +41,11 @@ export class GalleryController extends BaseHttpController {
   public async list(req: Request, res: Response) {
     try {
       const list = await this.galleryService.list(req.query.page);
-      await this.sleep(2000);
+      await Utils.sleep();
       res.status(200).json({ rows: list });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));
     }
-  }
-
-  async sleep(ms) {
-    return new Promise(resolve => {
-      setTimeout(resolve, ms)
-    })
   }
 
   /**
@@ -64,7 +59,7 @@ export class GalleryController extends BaseHttpController {
   public async fetch(req: Request, res: Response) {
     try {
       const item = await this.galleryService.fetch(req.params.id);
-      await this.sleep(2000);
+      await Utils.sleep();
       res.status(200).json({ data: this.filter(item) });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));
@@ -82,7 +77,7 @@ export class GalleryController extends BaseHttpController {
   public async create(req: Request, res: Response) {
     try {
       const gallery = await this.galleryService.create(req);
-      await this.sleep(2000);
+      await Utils.sleep();
       res.status(200).json({ data: this.filter(gallery) });
     } catch (err) {
       console.log(err);
@@ -104,7 +99,7 @@ export class GalleryController extends BaseHttpController {
       //req.body.tags = req.body.tags.split(",").map(tag => tag.trim());
       console.log(req.body.tags)
       const gallery = await this.galleryService.update(req.params.id, req.body);
-      await this.sleep(2000);
+      await Utils.sleep();
       res.status(200).json({ data: this.filter(gallery) });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));
@@ -122,7 +117,7 @@ export class GalleryController extends BaseHttpController {
   public async remove(req: Request, res: Response) {
     try {
       const gallery = await this.galleryService.remove(req.params.id);
-      await this.sleep(2000);
+      await Utils.sleep();
       res.status(200).json({ data: this.filter(gallery) });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));

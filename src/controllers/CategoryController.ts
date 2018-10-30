@@ -6,6 +6,7 @@ import { CategoryService } from "../services/CategoryService";
 import { ErrorHandler } from "../lib/ErrorHandler";
 import { CategoryValidationMiddleware } from "../validators/CategoryValidator";
 import { authRequired } from "../config/passport";
+import { Utils } from "../lib/Utils";
 
 /**
  * The category controller
@@ -40,17 +41,11 @@ export class CategoryController extends BaseHttpController {
   public async list(req: Request, res: Response) {
     try {
       const list = await this.categoryService.list(req.query.page);
-      await this.sleep(2000);
+      await Utils.sleep();
       res.status(200).json({ rows: list });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));
     }
-  }
-
-  async sleep(ms) {
-    return new Promise(resolve => {
-      setTimeout(resolve, ms)
-    })
   }
 
   /**
@@ -64,7 +59,7 @@ export class CategoryController extends BaseHttpController {
   public async fetch(req: Request, res: Response) {
     try {
       const item = await this.categoryService.fetch(req.params.id);
-      await this.sleep(2000);
+      await Utils.sleep();
       res.status(200).json({ data: this.filter(item) });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));
@@ -82,7 +77,7 @@ export class CategoryController extends BaseHttpController {
   public async create(req: Request, res: Response) {
     try {
       const category = await this.categoryService.create(req.body);
-      await this.sleep(2000);
+      await Utils.sleep();
       res.status(200).json({ data: this.filter(category) });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));
@@ -100,7 +95,7 @@ export class CategoryController extends BaseHttpController {
   public async update(req: Request, res: Response) {
     try {
       const category = await this.categoryService.update(req.params.id, req.body);
-      await this.sleep(2000);
+      await Utils.sleep();
       res.status(200).json({ data: this.filter(category) });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));
@@ -118,7 +113,7 @@ export class CategoryController extends BaseHttpController {
   public async remove(req: Request, res: Response) {
     try {
       const category = await this.categoryService.remove(req.params.id);
-      await this.sleep(2000);
+      await Utils.sleep();
       res.status(200).json({ data: this.filter(category) });
     } catch (err) {
       res.status(400).json(this.errorHandler.handle(err));

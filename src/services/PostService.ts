@@ -3,6 +3,7 @@ import { injectable } from "inversify";
 import { Post, IPostModel } from "../models/PostModel";
 import { ObjectId } from "mongodb";
 import mongoose from 'mongoose';
+import { DESTRUCTION } from "dns";
 
 /**
  * Post service: Basic post operations on the database
@@ -34,8 +35,10 @@ export class PostService {
    * @memberof PostService
    */
   async list(page?: number): Promise<IPostModel[]> {
-    return await Post.find({}, {_id: true, title: true, synopsis: true, slug: true, content: true, hero: true,
-      category: true, active: true, meta: true, readtime: true, created: true, updated: true});
+    return await Post.find({}, {
+      _id: true, title: true, synopsis: true, slug: true, content: true, hero: true,
+      category: true, active: true, meta: true, readtime: true, created: true, updated: true
+    });
   }
 
   /**
@@ -46,16 +49,11 @@ export class PostService {
    * @memberof PostService
    */
   async fetch(id: string): Promise<IPostModel | null> {
-    console.log(id)
-    console.log('hi')
-    console.log(mongoose.Types.ObjectId.isValid(id))
-    console.log('hello')
-    console.log(mongoose.Types.ObjectId.isValid(id))
     if (mongoose.Types.ObjectId.isValid(id)) {
-      return await Post.findById(id);  
+      return await Post.findById(id);
     } else {
-      return await Post.findOne({slug: id});
-    }    
+      return await Post.findOne({ slug: id });
+    }
   }
 
   /**
@@ -69,7 +67,8 @@ export class PostService {
   async update(id: string, model: IPostModel): Promise<IPostModel | null> {
     let { title, synopsis, slug, hero, category, content, active, meta, readtime } = model;
     return await Post.findByIdAndUpdate(id, {
-      title, synopsis, slug, hero, category, content, active, meta, readtime, updated: Date.now() }, { new: true });
+      title, synopsis, slug, hero, category, content, active, meta, readtime, updated: Date.now()
+    }, { new: true });
   }
 
   /**
@@ -92,6 +91,23 @@ export class PostService {
    * @memberof PostService
    */
   async postExists(slug: string): Promise<boolean> {
-    return await Post.find({slug: slug}).count() > 0;
+    return await Post.find({ slug: slug }).count() > 0;
   }
+
+  // More methods
+  async getLatestPosts(): Promise<IPostModel[]> {
+    // Return latest 3 posts only
+    return await Post
+      .find({})
+      .limit(3)
+      .sort({ 'created': -1 })
+      .exec();
+  }
+
+  async getPostBySlug(slug: string): Promise<IPostModel | null> {
+    return await Post
+      .findOne({ slug: slug })
+      .exec();
+  }
+
 }
