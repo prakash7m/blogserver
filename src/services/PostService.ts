@@ -101,12 +101,16 @@ export class PostService {
       .find({})
       .limit(3)
       .sort({ 'created': -1 })
+      .populate('category', ['name', 'description'])
+      .populate('hero')
       .exec();
   }
 
   async getPostBySlug(slug: string): Promise<IPostModel | null> {
     return await Post
       .findOne({ slug: slug })
+      .populate('category', ['name', 'description'])
+      .populate('hero')
       .exec();
   }
 
