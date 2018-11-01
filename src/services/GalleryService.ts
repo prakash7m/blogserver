@@ -21,8 +21,10 @@ export class GalleryService {
    */
   async create(req: any): Promise<IGalleryModel[]> {    
     let result: IGalleryModel[] = [], filename, rand = () => Math.ceil(Math.random() * 1000000000);
+    
     if (req.files.file instanceof Array) {
       for (let file of req.files.file) {
+        console.log(file.name)
         filename = this.makeFilename(file);
         await file.mv('src/media/' + filename);
         result.push(await this.insertNewMedia(file, filename));

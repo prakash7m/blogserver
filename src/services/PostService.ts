@@ -99,7 +99,7 @@ export class PostService {
     // Return latest 3 posts only
     return await Post
       .find({})
-      .limit(3)
+      .limit(6)
       .sort({ 'created': -1 })
       .populate('category', ['name', 'description'])
       .populate('hero')
