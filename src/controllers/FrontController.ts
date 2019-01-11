@@ -43,4 +43,15 @@ export class FrontController extends BaseHttpController {
     }
   }
 
+  @httpGet("/post/related/:slug")
+  public async getRelatedPosts(req: Request, res: Response) {
+    try {
+      const list = await this.postService.getRelatedPosts(req.params.slug);
+      await Utils.sleep();
+      res.status(200).json({ rows: list });
+    } catch (err) {
+      res.status(400).json(this.errorHandler.handle(err));
+    }
+  }
+
 }

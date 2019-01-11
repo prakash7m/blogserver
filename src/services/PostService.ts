@@ -96,7 +96,7 @@ export class PostService {
 
   // More methods
   async getLatestPosts(): Promise<IPostModel[]> {
-    // Return latest 3 posts only
+    // Return latest 6 posts only
     return await Post
       .find({})
       .limit(6)
@@ -109,6 +109,22 @@ export class PostService {
   async getPostBySlug(slug: string): Promise<IPostModel | null> {
     return await Post
       .findOne({ slug: slug })
+      .populate('category', ['name', 'description'])
+      .populate('hero')
+      .exec();
+  }
+
+  async getRawPostBySlug(slug: string): Promise<IPostModel | null> {
+    return await Post.findOne({ slug: slug }).exec();
+  }
+
+  async getRelatedPosts(slug: string): Promise<IPostModel[]> {
+    // Return latest 3 posts only
+    const post = await this.getRawPostBySlug(slug);
+    return await Post
+      .find({ category: { "$in": post ? post.category : [] }})
+      .limit(3)
+      .sort({ 'created': -1 })
       .populate('category', ['name', 'description'])
       .populate('hero')
       .exec();
